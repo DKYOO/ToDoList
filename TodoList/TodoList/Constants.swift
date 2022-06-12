@@ -11,4 +11,6 @@ import Foundation
 struct K {
     
     static let reuseCellName = "newCell"
+    static let itemArrayKey =  "TodoListArray"
+    static let title = "To Do List"
 }

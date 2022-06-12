@@ -15,7 +15,7 @@ class ToDoListViewController: UITableViewController {
     
 
     override func viewDidLoad() {
-        if let items = defaults.array(forKey: "TodoListArray") as? [String]  {
+        if let items = defaults.array(forKey: K.itemArrayKey) as? [String]  {
             itemArray = items
         }
         setupNavBar()
@@ -35,7 +35,7 @@ class ToDoListViewController: UITableViewController {
     //MARK: Setup Navigation Bar
     
     func setupNavBar() {
-        navigationItem.title = "Hello"
+        navigationItem.title = K.title
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusTaped))
         
     }
@@ -49,7 +49,7 @@ class ToDoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             self.itemArray.append(textField.text!)
             //add user defaults -> Plist
-            self.defaults.set(self.itemArray, forKey: "TodoListArray")
+            self.defaults.set(self.itemArray, forKey: K.itemArrayKey)
             
             self.tableView.reloadData()
         
