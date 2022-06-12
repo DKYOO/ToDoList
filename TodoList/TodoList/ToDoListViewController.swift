@@ -9,21 +9,25 @@ import UIKit
 
 class ToDoListViewController: UITableViewController {
     
-    let itemArray = ["Find Mike", "Buy Eggs", "Eat potatoes"]
+    var itemArray = ["Find Mike", "Buy Eggs", "Eat potatoes"]
     
+    let defaults = UserDefaults.standard
     
 
     override func viewDidLoad() {
+        if let items = defaults.array(forKey: "TodoListArray") as? [String]  {
+            itemArray = items
+        }
+        setupNavBar()
         super.viewDidLoad()
         view.backgroundColor = .systemOrange
-        setupNavBar()
         configureTableView()
     }
     
     //MARK: Creating TableView Datasource Methods
     
     func configureTableView() {
-
+        tableView.tintColor = .blue
         tableView.rowHeight = 50
         tableView.register(Cell.self, forCellReuseIdentifier: K.reuseCellName)
     }
@@ -31,17 +35,29 @@ class ToDoListViewController: UITableViewController {
     //MARK: Setup Navigation Bar
     
     func setupNavBar() {
-        title = "ToDoList"
-        navigationItem.rightBarButtonItem? = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusTaped))
+        navigationItem.title = "Hello"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusTaped))
+        
     }
     
     //MARK: Button Actions
     
     @objc private func plusTaped() {
+        var textField = UITextField()
         let alert = UIAlertController(title: "And New Item to the List", message: "", preferredStyle: .alert)
         
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
-            print("Sucess")
+            self.itemArray.append(textField.text!)
+            //add user defaults -> Plist
+            self.defaults.set(self.itemArray, forKey: "TodoListArray")
+            
+            self.tableView.reloadData()
+        
+        }
+        
+        alert.addTextField { (alertTextFiled) in
+            alertTextFiled.placeholder = "Create new Item"
+            textField = alertTextFiled
         }
         
         alert.addAction(action)

@@ -20,9 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        
         let navVC = UINavigationController(rootViewController: ToDoListViewController())
-        navVC.navigationBar.backgroundColor = .systemGreen
         navVC.navigationBar.barTintColor = .systemGreen
         window?.rootViewController = navVC
         window?.makeKeyAndVisible()
