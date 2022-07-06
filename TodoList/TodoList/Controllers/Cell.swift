@@ -11,7 +11,6 @@ import UIKit
 
 protocol Configurable {
     associatedtype Model
-    
     func configure(model: Model)
 }
 
@@ -21,23 +20,18 @@ final class Cell: UITableViewCell {
     
     // MARK: Properties
     private let label = UILabel()
-    
     // MARK: Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
         setupView()
     }
-    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
-    
     // MARK: Setup
     private func setupView() {
         // Label
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
+        label.translatesAutoresizingMaskIntoConstraints = true
         contentView.addSubview(label)
         contentView.backgroundColor = .systemBlue
         NSLayoutConstraint.activate([
