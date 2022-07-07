@@ -10,12 +10,15 @@ import UIKit
 class ToDoListViewController: UITableViewController {
     
     var itemArray = [Item]()
-    
     let defaults = UserDefaults.standard
-    
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        
+        print (dataFilePath)
         
         let newItem0 = Item()
         newItem0.title =  "Find Mike"
@@ -65,7 +68,15 @@ class ToDoListViewController: UITableViewController {
             
             self.itemArray.append(newItem)
             //add user defaults -> Plist
-            self.defaults.set(self.itemArray, forKey: K.itemArrayKey)
+           let encoder = PropertyListEncoder()
+            
+            do {
+                let data = try encoder.encode(self.itemArray)
+                
+            
+            } catch {
+                print ("Error encodind item array, \(error)")
+            }
             self.tableView.reloadData()
         }
         alert.addTextField { (alertTextFiled) in
