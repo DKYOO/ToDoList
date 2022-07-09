@@ -19,7 +19,11 @@ final class Cell: UITableViewCell {
     static let identifier = K.reuseCellName
     
     // MARK: Properties
-    private let label = UILabel()
+    private let label: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     // MARK: Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -30,8 +34,6 @@ final class Cell: UITableViewCell {
     }
     // MARK: Setup
     private func setupView() {
-        // Label
-        label.translatesAutoresizingMaskIntoConstraints = true
         contentView.addSubview(label)
         contentView.backgroundColor = .systemBlue
         NSLayoutConstraint.activate([

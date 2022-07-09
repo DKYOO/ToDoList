@@ -10,32 +10,15 @@ import UIKit
 class ToDoListViewController: UITableViewController {
     
     var itemArray = [Item]()
-    let defaults = UserDefaults.standard
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
 
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
         print (dataFilePath)
-        
-        let newItem0 = Item()
-        newItem0.title =  "Find Mike"
-        newItem0.done = true
-        itemArray.append(newItem0)
-        
-        let newItem1 = Item()
-        newItem1.title =  "Buy Eggos"
-        itemArray.append(newItem1)
-        
-        let newItem2 = Item()
-        newItem2.title =  "Destroy Demo"
-        itemArray.append(newItem2)
 
-        if let items = defaults.array(forKey: K.itemArrayKey) as? [Item]  {
-            itemArray = items
-        }
+        loadItems()
+        
         setupNavBar()
         view.backgroundColor = .systemOrange
         configureTableView()
@@ -65,19 +48,8 @@ class ToDoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             let newItem = Item()
             newItem.title = textField.text!
-            
             self.itemArray.append(newItem)
-            //add user defaults -> Plist
-           let encoder = PropertyListEncoder()
-            
-            do {
-                let data = try encoder.encode(self.itemArray)
-                
-            
-            } catch {
-                print ("Error encodind item array, \(error)")
-            }
-            self.tableView.reloadData()
+            self.saveItems()
         }
         alert.addTextField { (alertTextFiled) in
             alertTextFiled.placeholder = "Create new Item"
@@ -85,6 +57,30 @@ class ToDoListViewController: UITableViewController {
         }
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
+    }
+    
+    func saveItems() {
+        let encoder = PropertyListEncoder()
+         
+         do {
+             let data = try encoder.encode(itemArray)
+             try data.write(to: dataFilePath!)
+         } catch {
+             print ("Error encodind item array, \(error)")
+         }
+         self.tableView.reloadData()
+        
+    }
+    
+    func loadItems() {
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            do {
+            itemArray = try decoder.decode([Item].self, from: data)
+            } catch {
+                print("Error decoding item array, \(error)")
+            }
+        }
     }
 
 }
@@ -102,32 +98,13 @@ extension ToDoListViewController {
         
         let item = itemArray[indexPath.row]
         cell.textLabel?.text = item.title
-        
-        //Vkuritb!
         cell.accessoryType = item.done ? .checkmark : .none
-        //vs this
-        if item.done == true {
-            cell.accessoryType = .checkmark
-        } else {
-            cell.accessoryType = .none
-        }
-        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        print (itemArray[indexPath.row])
-        
-        //optimization =)
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
-        
-//        if itemArray[indexPath.row].done == false {
-//            itemArray[indexPath.row].done = true
-//        } else {
-//            itemArray[indexPath.row].done = false
-//        }
-        
-        tableView.reloadData()
+        saveItems()
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
