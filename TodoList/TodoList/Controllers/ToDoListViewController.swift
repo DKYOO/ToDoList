@@ -19,9 +19,7 @@ class ToDoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-
-//        loadItems()
-        
+        loadItems()
         setupNavBar()
         view.backgroundColor = .systemOrange
         configureTableView()
@@ -74,17 +72,16 @@ class ToDoListViewController: UITableViewController {
          self.tableView.reloadData()
         
     }
-//
-//    func loadItems() {
-//        if let data = try? Data(contentsOf: dataFilePath!) {
-//            let decoder = PropertyListDecoder()
-//            do {
-//            itemArray = try decoder.decode([Item].self, from: data)
-//            } catch {
-//                print("Error decoding item array, \(error)")
-//            }
-//        }
-//    }
+
+    func loadItems() {
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        do {
+            itemArray = try context.fetch(request)
+        } catch {
+            print("lalala\(error)")
+        }
+        
+    }
 
 }
 
@@ -106,7 +103,12 @@ extension ToDoListViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        //deleting from CoreData and local Array
+//        context.delete(itemArray[indexPath.row])
+//        itemArray.remove(at: indexPath.row)
+        //updatingCoreData and local Array
+//        itemArray[indexPath.row].setValue("Completed", forKey: "title")
+//        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         saveItems()
         tableView.deselectRow(at: indexPath, animated: true)
     }
