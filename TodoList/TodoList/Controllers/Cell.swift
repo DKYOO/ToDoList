@@ -21,7 +21,6 @@ final class Cell: UITableViewCell {
     // MARK: Properties
     private let label: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     // MARK: Initializers
