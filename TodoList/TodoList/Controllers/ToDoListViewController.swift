@@ -13,7 +13,8 @@ class ToDoListViewController: UITableViewController {
     var itemArray = [Item]()
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-
+    
+    let searchBar = UISearchBar()
     
     
     override func viewDidLoad() {
@@ -23,9 +24,21 @@ class ToDoListViewController: UITableViewController {
         setupNavBar()
         view.backgroundColor = .systemOrange
         configureTableView()
+        setupConstraints()
+        searchBar.delegate = self
     }
     
     //MARK: Creating TableView Datasource Methods
+    
+    func setupConstraints() {
+        view.addSubview(searchBar)
+        NSLayoutConstraint.activate([
+            searchBar.topAnchor.constraint(equalTo: view.topAnchor),
+            searchBar.leftAnchor.constraint(equalTo: view.leftAnchor),
+            searchBar.rightAnchor.constraint(equalTo: view.rightAnchor),
+            searchBar.bottomAnchor.constraint(equalTo: tableView.topAnchor)
+        ])
+    }
     
     func configureTableView() {
         tableView.tintColor = .blue
@@ -70,19 +83,15 @@ class ToDoListViewController: UITableViewController {
             print ("Error saving context \(error)")
          }
          self.tableView.reloadData()
-        
     }
 
-    func loadItems() {
-        let request: NSFetchRequest<Item> = Item.fetchRequest()
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
         do {
             itemArray = try context.fetch(request)
         } catch {
-            print("lalala\(error)")
+            print("Error fetching data from context\(error)")
         }
-        
     }
-
 }
 
 extension ToDoListViewController {
@@ -103,14 +112,44 @@ extension ToDoListViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //deleting from CoreData and local Array
+        //MARK: deleting from CoreData and local Array
+        
 //        context.delete(itemArray[indexPath.row])
 //        itemArray.remove(at: indexPath.row)
-        //updatingCoreData and local Array
+        
+        //MARK: updating CoreData and local Array
 //        itemArray[indexPath.row].setValue("Completed", forKey: "title")
 //        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        
         saveItems()
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    //MARK: - Search Bar Methods
+    
+  
+    
+}
+
+
+extension ToDoListViewController:  UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        print(searchBar.text)
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        loadItems(with: request)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadItems()
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+            
+        }
+    }
 }
