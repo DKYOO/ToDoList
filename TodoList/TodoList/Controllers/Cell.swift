@@ -34,7 +34,8 @@ final class Cell: UITableViewCell {
     // MARK: Setup
     private func setupView() {
         contentView.addSubview(label)
-        contentView.backgroundColor = .systemBlue
+        contentView.backgroundColor = .white
+        contentView.tintColor = .lightGray
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: contentView.topAnchor),
             label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
