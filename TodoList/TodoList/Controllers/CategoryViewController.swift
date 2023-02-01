@@ -6,13 +6,14 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
-class CategoryViewController: UITableViewController {
+class CategoryViewController: SwipeTableViewController {
     
-    var categories = [Category]()
+    let realm = try! Realm()
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var categories: Results<Category>?
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +30,7 @@ class CategoryViewController: UITableViewController {
     
     func configureTableView() {
         tableView.tintColor = .blue
-        tableView.rowHeight = 50
+        tableView.rowHeight = 80
         tableView.register(Cell.self, forCellReuseIdentifier: K.reuseCellName)
     }
     
@@ -37,25 +38,23 @@ class CategoryViewController: UITableViewController {
 
     // MARK: - TableView data source
 
-//    override func numberOfSections(in tableView: UITableView) -> Int {
-//        // #warning Incomplete implementation, return the number of sections
-//        return categories.count
-//    }
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categories.count
+        return categories?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: K.reuseCellName, for: indexPath)
-        cell.textLabel?.text = categories[indexPath.row].name
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories added"
         return cell
     }
     
     //MARK: - Data Manipulation Methods
     
-    func saveCategories() {
-        do { try context.save()
+    func save(category: Category) {
+        do {
+            try realm.write {
+                realm.add(category)
+            }
         } catch {
             print ("Error saving category\(error)")
         }
@@ -63,14 +62,20 @@ class CategoryViewController: UITableViewController {
     }
     
     func loadCategories() {
-        
-        let request: NSFetchRequest<Category> = Category.fetchRequest()
-        do {
-        categories = try context.fetch(request)
-        } catch {
-            print ("Error loading categories\(error)")
-        }
+        categories = realm.objects(Category.self)
         tableView.reloadData()
+    }
+    
+    override func updateModel(at indexPath: IndexPath) {
+        if let categoryForDelete = categories?[indexPath.row] {
+            do {
+                try realm.write {
+                    realm.delete(categoryForDelete)
+                }
+            } catch {
+                print("Error deleteting category, \(error)")
+            }
+        }
     }
  
     //MARK: - Add new Categories
@@ -80,11 +85,9 @@ class CategoryViewController: UITableViewController {
         let alert = UIAlertController(title: "Add New Category", message: "", preferredStyle: .alert)
         
         let action = UIAlertAction(title: "Add", style: .default) { (action) in
-            let newCategory = Category(context: self.context)
+            let newCategory = Category()
             newCategory.name = textField.text!
-            self.categories.append(newCategory)
-            self.saveCategories()
-            
+            self.save(category: newCategory)
         }
         alert.addAction(action)
         
@@ -105,12 +108,9 @@ class CategoryViewController: UITableViewController {
         
         let destanationVC = ToDoListViewController()
         if let indexPath = tableView.indexPathForSelectedRow {
-            destanationVC.selectedCategory = categories[indexPath.row]
+            destanationVC.selectedCategory = categories?[indexPath.row]
         }
         navigationController?.pushViewController(destanationVC, animated: true)
         
     }
-    
-   
-
 }

@@ -8,13 +8,14 @@
 import Foundation
 
 import UIKit
+import SwipeCellKit
 
 protocol Configurable {
     associatedtype Model
     func configure(model: Model)
 }
 
-final class Cell: UITableViewCell {
+final class Cell: SwipeTableViewCell {
     // MARK: Static
     static let identifier = K.reuseCellName
     
@@ -35,12 +36,10 @@ final class Cell: UITableViewCell {
     private func setupView() {
         contentView.addSubview(label)
         contentView.backgroundColor = .white
-        contentView.tintColor = .lightGray
+        contentView.tintColor = .systemBlue
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: contentView.topAnchor),
-            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            label.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
+            label.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor)
         ])
     }
 }
