@@ -9,6 +9,7 @@ import UIKit
 import SwipeCellKit
 
 class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegate {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -17,8 +18,8 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: K.reuseCellName, for: indexPath) as! SwipeTableViewCell
-        
-        
+        tableView.rowHeight = 80.0
+        cell.backgroundColor = UIColor.random
         cell.delegate = self
         return cell
     }

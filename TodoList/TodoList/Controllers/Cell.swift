@@ -35,8 +35,6 @@ final class Cell: SwipeTableViewCell {
     // MARK: Setup
     private func setupView() {
         contentView.addSubview(label)
-        contentView.backgroundColor = .white
-        contentView.tintColor = .systemBlue
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
             label.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor)

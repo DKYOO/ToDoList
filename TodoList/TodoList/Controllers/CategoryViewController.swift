@@ -29,8 +29,9 @@ class CategoryViewController: SwipeTableViewController {
     }
     
     func configureTableView() {
-        tableView.tintColor = .blue
+        tableView.tintColor = .black
         tableView.rowHeight = 80
+        tableView.separatorStyle = .none
         tableView.register(Cell.self, forCellReuseIdentifier: K.reuseCellName)
     }
     
@@ -44,7 +45,11 @@ class CategoryViewController: SwipeTableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories added"
+        if let category = categories?[indexPath.row] {
+            cell.textLabel?.text = category.name ?? "No categories added"
+            cell.backgroundColor = UIColor(hex: category.color ?? "1D9BF6")
+        }
+    
         return cell
     }
     
@@ -86,7 +91,8 @@ class CategoryViewController: SwipeTableViewController {
         
         let action = UIAlertAction(title: "Add", style: .default) { (action) in
             let newCategory = Category()
-            newCategory.name = textField.text!
+            newCategory.name = textField.text ?? ""
+            newCategory.color = UIColor.random.toHex()
             self.save(category: newCategory)
         }
         alert.addAction(action)
