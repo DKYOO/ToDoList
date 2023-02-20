@@ -24,32 +24,49 @@ class ToDoListViewController: SwipeTableViewController {
     let searchBar: UISearchBar = {
         let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
         searchBar.layoutMargins.left = 20
+        searchBar.autocapitalizationType = .none
+        searchBar.backgroundColor = .white
+        searchBar.isTranslucent = true
         searchBar.placeholder = "Search..."
         return searchBar
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupNavBar()
-//        view.backgroundColor = .white
-        configureTableView()
-//        searchBar.delegate = self
+        setupTableView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        guard let navBar = navigationController?.navigationBar else {
+            fatalError("Navigation Controller did not inited.")
+        }
+        navBar.prefersLargeTitles = true
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusTaped))
+        
+        if let colorHex = selectedCategory?.color {
+            title = selectedCategory!.name
+            navBar.barTintColor = UIColor(hex: colorHex)
+            navBar.backgroundColor = UIColor(hex: colorHex)
+            searchBar.barTintColor = UIColor(hex: colorHex)
+        }
     }
     
     //MARK: Creating TableView Datasource Methods
     
-    func configureTableView() {
+    func setupTableView() {
         tableView.tableHeaderView = searchBar
         tableView.tintColor = .blue
         tableView.rowHeight = 50
         tableView.register(Cell.self, forCellReuseIdentifier: K.reuseCellName)
+        searchBar.delegate = self
     }
     
     //MARK: Setup Navigation Bar
     
     func setupNavBar() {
-        navigationItem.title = K.title
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusTaped))
+        
+
+       
     }
     
     
@@ -111,6 +128,8 @@ extension ToDoListViewController {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if let item = todoItems?[indexPath.row] {
             cell.textLabel?.text = item.title
+            let colour = UIColor.init(hex: selectedCategory!.color)?.withAlphaComponent(CGFloat(indexPath.row) / CGFloat(todoItems!.count))
+            cell.backgroundColor = colour
             cell.accessoryType = item.done ? .checkmark : .none
         } else {
             cell.textLabel?.text = "No Items Added"

@@ -41,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func customNavBarAppearance() -> UINavigationBarAppearance {
         let customNavBarAppearance = UINavigationBarAppearance()
         
-        // Apply a red background.
+        // Apply background color.
         customNavBarAppearance.configureWithOpaqueBackground()
         customNavBarAppearance.backgroundColor = .random
         

@@ -78,4 +78,24 @@ extension UIColor {
             return String(format: "%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255))
         }
     }
+    
+    class var lightBlueColor: UIColor {
+        return UIColor(red: 113.0 / 255.0, green: 197.0 / 255.0, blue: 231.0 / 255.0, alpha: 1.0)
+    }
+}
+
+extension UIView {
+    
+    func makeGradient(colorOne: UIColor, colorTwo: UIColor) {
+        let gradientLayer = CAGradientLayer()
+        
+        gradientLayer.colors = [colorOne.cgColor, colorTwo.cgColor]
+        
+        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
+        gradientLayer.endPoint = CGPoint(x: 1.0, y: 1.0)
+        
+        self.layer.addSublayer(gradientLayer)
+        
+        
+    }
 }

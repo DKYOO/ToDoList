@@ -17,18 +17,27 @@ class CategoryViewController: SwipeTableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupNavBar()
-        configureTableView()
+        setupTableView()
         loadCategories()
         view.backgroundColor = .white
     }
     
-    func setupNavBar() {
-        navigationItem.title = K.title
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonPressed))
+    override func viewWillAppear(_ animated: Bool) {
+        setupNavBar()
     }
     
-    func configureTableView() {
+    func setupNavBar() {
+        
+        guard let navBar = navigationController?.navigationBar else {
+            fatalError("Navigation controller did not initialize.")
+        }
+        navBar.prefersLargeTitles = true
+        navigationItem.title = K.title
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonPressed))
+        navBar.backgroundColor = UIColor(hex: "1D9BF6")
+    }
+    
+    func setupTableView() {
         tableView.tintColor = .black
         tableView.rowHeight = 80
         tableView.separatorStyle = .none
@@ -46,8 +55,8 @@ class CategoryViewController: SwipeTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if let category = categories?[indexPath.row] {
-            cell.textLabel?.text = category.name ?? "No categories added"
-            cell.backgroundColor = UIColor(hex: category.color ?? "1D9BF6")
+            cell.textLabel?.text = category.name
+            cell.backgroundColor = UIColor(hex: category.color)
         }
     
         return cell
