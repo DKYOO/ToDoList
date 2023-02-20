@@ -43,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Apply background color.
         customNavBarAppearance.configureWithOpaqueBackground()
-        customNavBarAppearance.backgroundColor = .random
+        customNavBarAppearance.backgroundColor = UIColor(hex: "1D9BF6")
         
         // Apply white colored normal and large titles.
         customNavBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]

@@ -86,16 +86,16 @@ extension UIColor {
 
 extension UIView {
     
-    func makeGradient(colorOne: UIColor, colorTwo: UIColor) {
+    func makeGradient(colorHex: String) {
+        let color = UIColor(hex: colorHex)
+        
         let gradientLayer = CAGradientLayer()
         
-        gradientLayer.colors = [colorOne.cgColor, colorTwo.cgColor]
+        gradientLayer.colors = [colorHex, UIColor.white.cgColor]
         
         gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
         gradientLayer.endPoint = CGPoint(x: 1.0, y: 1.0)
         
         self.layer.addSublayer(gradientLayer)
-        
-        
     }
 }

@@ -44,6 +44,7 @@ final class Cell: SwipeTableViewCell {
 
 // MARK: - Configurable
 extension Cell: Configurable {
+  
     struct Model {
         let text: String
     }
@@ -51,5 +52,6 @@ extension Cell: Configurable {
     func configure(model: Model) {
         label.text = model.text
     }
+    
 }
 

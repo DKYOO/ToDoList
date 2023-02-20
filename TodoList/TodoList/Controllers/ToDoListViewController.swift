@@ -26,7 +26,6 @@ class ToDoListViewController: SwipeTableViewController {
         searchBar.layoutMargins.left = 20
         searchBar.autocapitalizationType = .none
         searchBar.backgroundColor = .white
-        searchBar.isTranslucent = true
         searchBar.placeholder = "Search..."
         return searchBar
     }()
@@ -48,6 +47,7 @@ class ToDoListViewController: SwipeTableViewController {
             navBar.barTintColor = UIColor(hex: colorHex)
             navBar.backgroundColor = UIColor(hex: colorHex)
             searchBar.barTintColor = UIColor(hex: colorHex)
+            searchBar.backgroundColor = .white
         }
     }
     
@@ -128,7 +128,7 @@ extension ToDoListViewController {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if let item = todoItems?[indexPath.row] {
             cell.textLabel?.text = item.title
-            let colour = UIColor.init(hex: selectedCategory!.color)?.withAlphaComponent(CGFloat(indexPath.row) / CGFloat(todoItems!.count))
+            let colour = UIColor.init(hex: selectedCategory!.color)?.withAlphaComponent(0.3 + CGFloat(indexPath.row) / CGFloat(todoItems!.count))
             cell.backgroundColor = colour
             cell.accessoryType = item.done ? .checkmark : .none
         } else {
